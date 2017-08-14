@@ -1,0 +1,16 @@
+doctype html
+html
+   body
+      h1 Hall
+      form(method='post', action='/game')
+         ol
+         - for (var i = 0; i < waitings.length; i++)
+               li
+                 input(type='radio' name='user', value=waitings[i].name )
+                 | #{waitings[i].name}
+         li
+            input(type='radio' name='user', value=myName )
+            | wait
+         p
+         input(type="submit" value="Submit")
+         input(type="hidden" name="myName" value=myName)

@@ -1,0 +1,21 @@
+doctype html
+html
+   body
+      h1 #{game.player1.name} vs ...
+
+      div#panel(style='display: none')
+         input(type='radio', name='subj', value='1')
+         | камень
+         input(type='radio', name='subj', value='2')
+         | ножницы
+         input(type='radio', name='subj', value='3')
+         | бумага
+         p: button(onclick="step()") Походить
+
+      div#message(style='display: none') Wait a partner
+
+script(src="jquery-3.2.1.min.js")
+script.
+    var myName = '#{myName}';
+script(src="game.ws.js")
+
