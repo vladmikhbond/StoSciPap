@@ -36,7 +36,7 @@ socket.onclose = function(event) {
     if (event.wasClean) {
         alert('Соединение закрыто чисто');
     } else {
-        alert('Обрыв соединения'); // например, "убит" процесс сервера
+        //alert('Обрыв соединения'); // например, "убит" процесс сервера
     }
     //alert('Код: ' + event.code + ' причина: ' + event.reason);
 }
