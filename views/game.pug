@@ -1,21 +1,24 @@
 doctype html
 html
    body
-      h1 #{game.player1.name} vs ...
-
       div#panel(style='display: none')
+         h4#header
+         ol#steps
+         div#score
+         hr
+
          input(type='radio', name='subj', value='1')
-         | камень
+         | Камень
          input(type='radio', name='subj', value='2')
-         | ножницы
+         | Ножницы
          input(type='radio', name='subj', value='3')
-         | бумага
-         p: button(onclick="step()") Походить
+         | Бумага
+         p: button(onclick="do_step()") Походить
 
       div#message(style='display: none') Wait a partner
 
 script(src="jquery-3.2.1.min.js")
 script.
     var myName = '#{myName}';
-script(src="game.ws.js")
+script(src="client_ws.js")
 
