@@ -13,9 +13,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('views', './views');
 app.set('view engine', 'pug');
 
-app.get('/', home.login);
-app.post('/', home.hall);
-app.post('/game', home.game);
+app.get('/', home.login_action);
+app.post('/', home.hall_action);
+app.post('/game', home.game_action);
 
 
 app.listen(8000);

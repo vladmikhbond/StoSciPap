@@ -1,17 +1,18 @@
+"use strict";
 
 const WebSocketServer = new require('ws');
 const home = require('./home');
 
 // WebSocket-сервер на порту
-var webSocketServer = new WebSocketServer.Server({
+const webSocketServer = new WebSocketServer.Server({
     port: 8001
 });
 
 webSocketServer.on('connection', function(ws) {
-    console.log("новое соединение ");
+    console.log("Сервер: новое соединение");
     // on server
     ws.on('message', function(message) {
-        console.log('получено сообщение ' + message);
+        console.log('Сервер: получил сообщение ' + message);
         let playerName = message.split(':')[0];
         let command = message.split(':')[1];
         switch (command) {
@@ -24,11 +25,10 @@ webSocketServer.on('connection', function(ws) {
                 step_command(playerName, command, ws);
                 break;
         }
-
     });
 
     ws.on('close', function() {
-        console.log('соединение закрыто ' );
+        console.log('Сервер: соединение закрыто' );
     });
 
 });
@@ -36,9 +36,19 @@ webSocketServer.on('connection', function(ws) {
 function hi_command(playerName, ws) {
     // находим данного игрока в списке и сохраняем сокет
     let user = home.userByName(playerName);
+    if (!user) {
+        console.log('Сервер: не найден пользователь ' + playerName);
+        return;
+    }
     user.socket = ws;
     // находим игру с данным игроком и определяеи ее готовность
     let game = home.games.find(g => g.player1 == user || g.player2 == user);
+    if (!game) {
+        console.log('Сервер: не найдена игра с игроком ' + user.name);
+        return;
+    }
+    user.socket = ws;
+
     if (game.player1 == undefined || game.player2 == undefined) {
         let json = JSON.stringify({
             "command": "halfready",
@@ -69,23 +79,38 @@ function step_command(playerName, subj, ws) {
 
     // если оба игрока походили, запоминаем ход и отсылаем им результат
     if (game.isStepReady()) {
-        game.acceptStep();
+        let winner = game.acceptStep();
         let data = {
             "command": "step",
-            "steps": game.steps,
+            "steps": deepCopy(game.steps),
             "score": game.getScore(),
+            "winner": winner
         };
         game.player1.socket.send(JSON.stringify(data));
         reverse(data);
         game.player2.socket.send(JSON.stringify(data));
+
+        // if game is over - remove the players and the game
+        if (winner) {
+            home.removeUser(game.player1);
+            home.removeUser(game.player2);
+            home.removeGame(game);
+        }
     }
 
-    function reverse(d) {
-        for (let i = 0; i < d.steps.length; i++) {
-            d.steps[i].reverse();
+    function deepCopy(steps) {
+        let res = [];
+        for (let i = 0; i < steps.length; i++) {
+            res.push(steps[i].slice());
         }
-        d.score.reverse();
+        return res;
+    }
+
+    function reverse(data) {
+        for (let i = 0; i < data.steps.length; i++) {
+            data.steps[i].reverse();
+        }
+        data.score.reverse();
     }
 
 }
-

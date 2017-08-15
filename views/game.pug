@@ -1,26 +1,25 @@
 doctype html
 html
-   body
-      div#panel(style='display: none')
-         h4#header
-         ol#steps
-         div
-            |Счет 
-            span#score
-         hr
+    body
+        h1 Игра
+        div#panel(style='display: none')
+            h4#header
+            ol#steps
+            div
+                span#score
 
-         input(type='radio', name='subj', value='1')
-         | Камень
-         input(type='radio', name='subj', value='2')
-         | Ножницы
-         input(type='radio', name='subj', value='3')
-         | Бумага
-         p: button(onclick="do_step()") Походить
+                div#step-panel
+                    input(type='radio', name='subj', value='1')
+                    | Камень
+                    input(type='radio', name='subj', value='2')
+                    | Ножницы
+                    input(type='radio', name='subj', value='3')
+                    | Бумага
+                    p: button(onclick="do_step()") Походить
 
-      div#message(style='display: none') Wait a partner
+        div#message(style='display: none')
 
-script(src="jquery-3.2.1.min.js")
-script.
-    var myName = '#{myName}';
-script(src="client_ws.js")
-
+        script(src="jquery-3.2.1.min.js")
+        script.
+            var myName = '#{myName}';
+        script(src="client_ws.js")

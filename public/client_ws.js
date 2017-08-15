@@ -27,6 +27,11 @@ socket.onmessage = function(event) {
                 $("#steps").append($("<li> " + a + " vs " + b + "</li>"));
             }
             $("#score").html(data.score[0] + " : " + data.score[1]);
+            if (data.winner) {
+                $("#step-panel").css('display', 'none');
+                $("#message").css('display', 'block')
+                    .html('Игра окончена. Победил ' + data.winner);
+            }
             break;
     }
 }
