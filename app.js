@@ -1,7 +1,7 @@
 "use strict";
 const express = require('express');
 const app = express();
-const home = require('./home');
+const home = require('./homeController');
 const bodyParser = require('body-parser');
 
 const server_ws = require('./server_ws');

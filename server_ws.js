@@ -1,10 +1,10 @@
 "use strict";
 
-const WebSocketServer = new require('ws');
-const home = require('./home');
+const WebSocket = new require('ws');
+const home = require('./homeController');
 
 // WebSocket-сервер на порту
-const webSocketServer = new WebSocketServer.Server({
+const webSocketServer = new WebSocket.Server({
     port: 8001
 });
 
@@ -56,16 +56,20 @@ function hi_command(playerName, ws) {
         });
         ws.send(json);
     } else {
-        game.player1.socket.send(JSON.stringify({
-            "command": "ready",
-            "name1": game.player1.name,
-            "name2": game.player2.name,
-        }));
-        game.player2.socket.send(JSON.stringify({
-            "command": "ready",
-            "name1": game.player2.name,
-            "name2": game.player1.name,
-        }));
+        if (game.player1.socket && game.player1.socket.readyState === WebSocket.OPEN) {
+            game.player1.socket.send(JSON.stringify({
+                "command": "ready",
+                "name1": game.player1.name,
+                "name2": game.player2.name,
+            }));
+        };
+        if (game.player2.socket && game.player2.socket.readyState === WebSocket.OPEN) {
+            game.player2.socket.send(JSON.stringify({
+                "command": "ready",
+                "name1": game.player2.name,
+                "name2": game.player1.name,
+            }));
+        };
     }
 }
 

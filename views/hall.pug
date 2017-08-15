@@ -1,11 +1,10 @@
 doctype html
 html
    body
-      h1 Hall
+      h1 Зал ожидания
       form(method='post', action='/game')
          | Вас ожидают:
-         ol
-         - for (var i = 0; i < waitings.length; i++)
+         ol: - for (var i = 0; i < waitings.length; i++)
                li
                  input(type='radio' name='user', value=waitings[i].name )
                  | #{waitings[i].name}

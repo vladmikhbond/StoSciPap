@@ -1,57 +1,68 @@
 ﻿"use strict";
 
-var socket = new WebSocket("ws://localhost:8001");
+// -------------- ws suit --------------------
+
+const socket = new WebSocket("ws://localhost:8001");
 socket.onopen = function() {
     socket.send(myName + ':hi');
-}
+};
 
 // on client
 socket.onmessage = function(event) {
     let data = JSON.parse(event.data);
+    let $message = $("#message");
+    let $steps = $("#steps");
 
     switch (data.command) {
         case 'halfready':
-            $("#message").css('display', 'block');
+            $message.css('display', 'block')
+                .html('Игра начнется, как только появится партнер.');
             break;
         case 'ready':
             $("#panel").css('display', 'block');
-            $("#message").css('display', 'none');
-            $("#header").html(data.name1 + " vs " + data.name2);
+            $message.css('display', 'none');
+            $("#header").html(data.name1 + " -vs- " + data.name2);
             break;
         case "step":   // show current game state
             let subj = ["", "Камень", "Ножницы", "Бумага"];
-            $("#steps").empty();
+            $steps.empty();
             for (let i = 0; i < data.steps.length; i++) {
                 let a = subj[data.steps[i][0]];
                 let b = subj[data.steps[i][1]];
-                $("#steps").append($("<li> " + a + " vs " + b + "</li>"));
+                $steps.append($("<li> " + a + " -vs- " + b + "</li>"));
             }
             $("#score").html(data.score[0] + " : " + data.score[1]);
+
+            // game is over
             if (data.winner) {
                 $("#step-panel").css('display', 'none');
-                $("#message").css('display', 'block')
-                    .html('Игра окончена. Победил ' + data.winner);
+                let mes = data.score[0] === data.score[1] ? "Ничья" :
+                    data.winner === myName ? "Вы победили!" : "Вы проиграли.";
+                $message.css('display', 'block')
+                    .html('<a href="/"> Игра окончена. ' + mes + '</a>');
             }
             break;
     }
-}
-
+};
 
 socket.onclose = function(event) {
     if (event.wasClean) {
-        alert('Соединение закрыто чисто');
+        console.log('Соединение закрыто чисто');
     } else {
-        //alert('Обрыв соединения'); // например, "убит" процесс сервера
+        console.log('Обрыв соединения'); // например, "убит" процесс сервера
     }
-    //alert('Код: ' + event.code + ' причина: ' + event.reason);
-}
+    console.log('Код: ' + event.code + ' причина: ' + event.reason);
+};
 
 socket.onerror = function(error) {
-    alert("Ошибка " + error.message);
-}
+    console.log("Ошибка " + error.message);
+};
 
-// player pushed 'Step' button
-function do_step() {
-    let subj = $('input[name=subj]:checked').val();
-    socket.send(myName + ':' + subj);
-}
+// -------------- event handlers --------------------
+
+$(function() {
+    $('#step-button').on('click', function() {
+        let subj = $('input[name=subj]:checked').val();
+        socket.send(myName + ':' + subj);
+    });
+})
