@@ -1,7 +1,7 @@
 "use strict";
 
 const WebSocket = new require('ws');
-const home = require('./homeController');
+const model = require("./model/model.js");
 
 // WebSocket-сервер на порту
 const webSocketServer = new WebSocket.Server({
@@ -35,14 +35,14 @@ webSocketServer.on('connection', function(ws) {
 
 function hi_command(playerName, ws) {
     // находим данного игрока в списке и сохраняем сокет
-    let user = home.userByName(playerName);
+    let user = model.userByName(playerName);
     if (!user) {
         console.log('Сервер: не найден пользователь ' + playerName);
         return;
     }
     user.socket = ws;
     // находим игру с данным игроком и определяеи ее готовность
-    let game = home.games.find(g => g.player1 == user || g.player2 == user);
+    let game = model.games.find(g => g.player1 == user || g.player2 == user);
     if (!game) {
         console.log('Сервер: не найдена игра с игроком ' + user.name);
         return;
@@ -62,21 +62,21 @@ function hi_command(playerName, ws) {
                 "name1": game.player1.name,
                 "name2": game.player2.name,
             }));
-        };
+        }
         if (game.player2.socket && game.player2.socket.readyState === WebSocket.OPEN) {
             game.player2.socket.send(JSON.stringify({
                 "command": "ready",
                 "name1": game.player2.name,
                 "name2": game.player1.name,
             }));
-        };
+        }
     }
 }
 
 function step_command(playerName, subj, ws) {
     // находим игру с данным игроком
-    let user = home.userByName(playerName);
-    let game = home.games.find(g => g.player1 == user || g.player2 == user);
+    let user = model.userByName(playerName);
+    let game = model.games.find(g => g.player1 == user || g.player2 == user);
     // находим индекс игрока, приславшего ход, и записываем ход
     let i = game.player1 == user ? 0 : 1;
     game.lastStep[i] = subj;
@@ -96,9 +96,9 @@ function step_command(playerName, subj, ws) {
 
         // if game is over - remove the players and the game
         if (winner) {
-            home.removeUser(game.player1);
-            home.removeUser(game.player2);
-            home.removeGame(game);
+            model.removeUser(game.player1);
+            model.removeUser(game.player2);
+            model.removeGame(game);
         }
     }
 

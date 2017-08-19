@@ -45,4 +45,7 @@ Game.prototype.getScore = function() {
     return res;
 };
 
-module.exports = Game;
+////////// EXPORTS /////////////////
+exports.Game = Game;
+//module.exports = Game;
+
