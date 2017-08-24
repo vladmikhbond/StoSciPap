@@ -1,7 +1,7 @@
 "use strict";
 
 const WebSocket = new require('ws');
-const model = require("./model/model.js");
+const model = require("../model/model.js");
 
 // WebSocket-сервер на порту
 const webSocketServer = new WebSocket.Server({
@@ -35,7 +35,7 @@ webSocketServer.on('connection', function(ws) {
 
 function hi_command(playerName, ws) {
     // находим данного игрока в списке и сохраняем сокет
-    let user = model.userByName(playerName);
+    let user = model.findUserByName(playerName);
     if (!user) {
         console.log('Сервер: не найден пользователь ' + playerName);
         return;
@@ -75,7 +75,7 @@ function hi_command(playerName, ws) {
 
 function step_command(playerName, subj, ws) {
     // находим игру с данным игроком
-    let user = model.userByName(playerName);
+    let user = model.findUserByName(playerName);
     let game = model.games.find(g => g.player1 == user || g.player2 == user);
     // находим индекс игрока, приславшего ход, и записываем ход
     let i = game.player1 == user ? 0 : 1;
@@ -96,8 +96,8 @@ function step_command(playerName, subj, ws) {
 
         // if game is over - remove the players and the game
         if (winner) {
-            model.removeUser(game.player1);
-            model.removeUser(game.player2);
+            //model.removeUser(game.player1);
+            //model.removeUser(game.player2);
             model.removeGame(game);
         }
     }

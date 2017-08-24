@@ -1,8 +1,11 @@
 doctype html
 html
    body
-      h1 Вход
+      h1 Регистрация и вход
       form(method='post', action='/')
-         | Input your name
-         input(type="text", name="userName")
-         input(type="submit" value="Submit")
+         p Имя
+         input(type="text", name="userName", value=userName)
+         p Пароль
+         input(type="text", name="password")
+         p
+         input(type="submit" value="Вход")

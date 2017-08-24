@@ -1,16 +1,12 @@
 "use strict";
 
-const Game = require("./game_module.js").Game;
+const Game = require("./game.js").Game;
 
-const users = [{name: "user1"}, {name: "user2"}, {name: "user3"}, {name: "user4"},  ];
-const games = [new Game(users[0],users[1]), new Game(users[2]), new Game(users[3])];
+const users = [];
+const games = [];
 
-function userByName(userName) {
+function findUserByName(userName) {
     return users.find(u => u.name === userName);
-}
-
-function isUserNameUnique(userName) {
-    return userByName(userName) === undefined;
 }
 
 function whoWaits() {
@@ -42,8 +38,8 @@ function removeGame(game) {
 ////////// EXPORTS /////////////////
 
 exports.users = users;
-exports.isUserNameUnique = isUserNameUnique;
-exports.userByName = userByName;
+exports.findUserByName = findUserByName;
+
 exports.removeUser = removeUser;
 exports.whoWaits = whoWaits;
 
