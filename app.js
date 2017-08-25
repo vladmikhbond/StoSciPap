@@ -19,24 +19,10 @@ app.use(sesion({
 
 require('./routes')(app);
 
-// app.use(function (req, res, next) {
-//     if (!req.session.views) {
-//         req.session.views = {};
-//     }
-//
-//     // get the url pathname
-//     let pathname = parseurl(req).pathname;
-//
-//     // count the views
-//     req.session.views[pathname] = (req.session.views[pathname] || 0) + 1
-//
-//     next()
-// })
+const PORT = 8000;
+app.listen(PORT);
 
-
-
-app.listen(8000);
-console.log('Server running on 8000');
+console.log('Server running on ' + PORT);
 
 // pretty html from pug
 if (app.get('env') === 'development') {
