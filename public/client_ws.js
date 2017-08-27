@@ -2,7 +2,7 @@
 
 // -------------- ws suit --------------------
 
-const socket = new WebSocket("ws://localhost:8001");
+const socket = new WebSocket("ws://localhost:5558");
 socket.onopen = function() {
     socket.send(myName + ':hi');
 };

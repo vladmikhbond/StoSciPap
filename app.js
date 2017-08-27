@@ -19,7 +19,7 @@ app.use(sesion({
 
 require('./routes')(app);
 
-const PORT = 8000;
+const PORT = 5557;
 app.listen(PORT);
 
 console.log('Server running on ' + PORT);

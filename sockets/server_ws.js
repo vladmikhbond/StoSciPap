@@ -5,30 +5,30 @@ const model = require("../model/model.js");
 
 // WebSocket-сервер на порту
 const webSocketServer = new WebSocket.Server({
-    port: 8001
+    port: 5558
 });
 
 webSocketServer.on('connection', function(ws) {
-    console.log("Сервер: новое соединение");
+    console.log("Server: new connection");
     // on server
     ws.on('message', function(message) {
-        console.log('Сервер: получил сообщение ' + message);
+        console.log('Server: get message ' + message);
         let playerName = message.split(':')[0];
         let command = message.split(':')[1];
         switch (command) {
             case 'hi':
                 hi_command(playerName, ws);
                 break;
-            case '1':
-            case '2':
-            case '3':
+            case '1':  // stoune
+            case '2':  // scissors
+            case '3':  // paper
                 step_command(playerName, command, ws);
                 break;
         }
     });
 
     ws.on('close', function() {
-        console.log('Сервер: соединение закрыто' );
+        console.log('Server: connection closed' );
     });
 
 });
@@ -37,14 +37,14 @@ function hi_command(playerName, ws) {
     // находим данного игрока в списке и сохраняем сокет
     let user = model.findUserByName(playerName);
     if (!user) {
-        console.log('Сервер: не найден пользователь ' + playerName);
+        console.log('Server: the user '+ playerName + ' not found');
         return;
     }
     user.socket = ws;
     // находим игру с данным игроком и определяеи ее готовность
     let game = model.games.find(g => g.player1 == user || g.player2 == user);
     if (!game) {
-        console.log('Сервер: не найдена игра с игроком ' + user.name);
+        console.log('Server: a game of ' + user.name + ' not found');
         return;
     }
     user.socket = ws;
